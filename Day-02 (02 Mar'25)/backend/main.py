@@ -33,9 +33,11 @@ async def upload(file: UploadFile = File(...)):
 
 
 # get the python files location
+DIRECTORY = "."  # Change this to the folder where Python files are stored
+
 @app.get("/files")
 async def files():
-    files = [f for f in os.listdir() if f.endswith(".py")]
+    files = [f for f in os.listdir(DIRECTORY) if f.endswith(".py") and f != "main.py"]
     return {"files": files}
 
 # get the file content

@@ -31,6 +31,7 @@ function Navbar() {
             <Link href="/about" className="hover:text-gray-400 transition">About</Link>
             <Link href="/services" className="hover:text-gray-400 transition">Services</Link>
             <Link href="/contact" className="hover:text-gray-400 transition">Contact</Link>
+            <Link href="/codereviewerai-analyze" className="hover:text-gray-400 transition">Files Lists</Link>
           </div>
         </div>
       </div>
@@ -42,6 +43,7 @@ function Navbar() {
           <Link href="/about" className="block hover:text-gray-400" onClick={() => setIsOpen(false)}>About</Link>
           <Link href="/services" className="block hover:text-gray-400" onClick={() => setIsOpen(false)}>Services</Link>
           <Link href="/contact" className="block hover:text-gray-400" onClick={() => setIsOpen(false)}>Contact</Link>
+          <Link href="/codereviewerai-analyze" className="block hover:text-gray-400" onClick={() => setIsOpen(false)}>Files Lists</Link>
         </div>
       )}
     </nav>
