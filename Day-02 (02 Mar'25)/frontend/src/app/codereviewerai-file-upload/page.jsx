@@ -37,6 +37,7 @@ function page() {
 
       const data = await response.json();
       setMessage(data.message);
+      alert(data.message);
 
       if (response.ok) {
         setMessage("File uploaded successfully");
@@ -44,8 +45,9 @@ function page() {
           alert(data.message);
           router.push("/codereviewerai-analyze");
         }
-
+        
       } else {
+        alert(data.message);
         throw new Error(data.message || "File upload failed");
       }
     } catch (error) {
