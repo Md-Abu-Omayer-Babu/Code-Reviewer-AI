@@ -4,6 +4,15 @@ from pathlib import Path
 
 app = FastAPI()
 
+# Allow frontend to access the backend
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],  # Allow only Next.js frontend
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 # check api
 @app.get("/")
 async def root():

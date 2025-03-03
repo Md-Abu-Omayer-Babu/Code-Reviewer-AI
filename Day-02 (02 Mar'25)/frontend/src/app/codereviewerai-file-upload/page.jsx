@@ -11,7 +11,6 @@ function page() {
 
   const handleUpload = () => {
     fileInputRef.current.click();
-    // document.getElementById("fileInput").click();
   };
 
   const handleFileChange = (event) => {
