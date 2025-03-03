@@ -37,8 +37,8 @@ function Welcome() {
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          onClick={() => router.push("/codereviewerai")}
-          className="mt-6 px-6 py-3 bg-blue-500 text-lg font-semibold rounded-lg shadow-lg hover:bg-blue-600 transition"
+          onClick={() => router.push("/codereviewerai-file-upload")}
+          className="mt-6 px-6 py-3 cursor-pointer bg-blue-500 text-lg font-semibold rounded-lg shadow-lg hover:bg-blue-600 transition"
         >
           Review My Code
         </motion.button>
