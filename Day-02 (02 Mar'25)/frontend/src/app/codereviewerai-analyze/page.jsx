@@ -86,10 +86,10 @@ function Page() {
           <div>
             <pre className="bg-white p-4 rounded-md">
               <h2 className="text-xl font-semibold text-center text-blue-500">Class Names:</h2>
-              {className}
-              <br />
-              <h3 className="text-xl font-semibold text-center text-blue-500">Full Code:</h3><br />
-              {content}
+              <p className="text-center">{className}</p>
+              <br /><br />
+              <h3 className="text-xl font-semibold text-center text-blue-500">Full Code:</h3>
+              <p className="">{content}</p>
             </pre>
           </div>
         )}

@@ -39,7 +39,7 @@ DIRECTORY = "."  # Change this to the folder where Python files are stored
 
 @app.get("/files")
 async def files():
-    files = [f for f in os.listdir(DIRECTORY) if f.endswith(".py") and f != "main.py"]
+    files = [f for f in os.listdir(DIRECTORY) if f.endswith(".py") and f != "main.py" and f != "class_finder.py"]
     return {"files": files}
 
 # get the file content
