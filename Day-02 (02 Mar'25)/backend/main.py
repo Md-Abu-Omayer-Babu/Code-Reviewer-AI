@@ -1,7 +1,9 @@
-from fastapi import FastAPI, UploadFile, File
+from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
 import os
 from pathlib import Path
+from class_finder import classFinder
 
 app = FastAPI()
 
@@ -57,3 +59,16 @@ async def delete_file(file: str):
         return {"error": "Invalid file"}
     os.remove(file_path)
     return {"message": "File deleted successfully"}
+
+
+class PythonFile(BaseModel):
+    file_name: str
+    content: str
+
+@app.post("/class_finder")
+async def class_finder(python_file: PythonFile):
+    try:
+        classes = classFinder(python_file.content)
+        return {"file_name": python_file.file_name, "classes": classes}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))

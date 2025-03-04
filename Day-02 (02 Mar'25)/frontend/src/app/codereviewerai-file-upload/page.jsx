@@ -42,7 +42,6 @@ function page() {
       if (response.ok) {
         setMessage("File uploaded successfully");
         if (data.message === "File uploaded successfully") {
-          alert(data.message);
           router.push("/codereviewerai-analyze");
         }
         
