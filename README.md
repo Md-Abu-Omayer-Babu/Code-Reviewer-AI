@@ -42,13 +42,15 @@ To get started with Code Reviewer AI, follow these steps:
    - For the backend:
      ```bash
      cd backend
-     pip install -r requirements.txt
+     <!-- pip install -r requirements.txt -->
      ```
 
 3. **Run the application**:
    - Start the FastAPI backend:
      ```bash
      uvicorn main:app --reload
+     or
+     fastapi dev main.py
      ```
 
    - Start the Next.js frontend:

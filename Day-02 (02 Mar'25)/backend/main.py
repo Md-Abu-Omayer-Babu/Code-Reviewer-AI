@@ -10,7 +10,7 @@ app = FastAPI()
 # Allow frontend to access the backend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # Allow only Next.js frontend
+    allow_origins=["http://localhost:3000"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -50,7 +50,7 @@ async def file_content(file: str):
         return {"error": "Invalid file"}
     with open(file_path, "r") as f:
         return {"content": f.read()}
-    
+
 # delete a file
 @app.delete("/files/{file}")
 async def delete_file(file: str):
