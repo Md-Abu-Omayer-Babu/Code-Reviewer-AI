@@ -29,7 +29,8 @@ function Page() {
       });
       setClassName(response.data.classes.join(", "));
     } catch (error) {
-      alert("Error finding classes:", error);
+      console.log(error.message);
+      alert("Error finding classes:", error.message);
     }
   };
 
