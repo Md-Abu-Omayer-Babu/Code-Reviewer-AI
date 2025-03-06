@@ -9,20 +9,22 @@ from models.files import PythonFile
 
 router = APIRouter()
 
+# Define a directory to store uploaded files
+UPLOAD_DIRECTORY = "db" 
+
+# Ensure the upload directory exists
+os.makedirs(UPLOAD_DIRECTORY, exist_ok=True)
+
 # upload a python file
 @router.post("/upload")
 async def upload(file: UploadFile = File(...)):
     if file.filename.endswith(".py"):
-        file_location = Path(file.filename)
+        file_location = Path(UPLOAD_DIRECTORY) / file.filename
         with open(file_location, "wb") as f:
             f.write(await file.read())
         return {"message": "File uploaded successfully"}
     else:
         return {"message": "File is not a python file"}
-
-
-# get the python files location
-DIRECTORY = "."  # Change this to the folder where Python files are stored
 
 @router.get("/files")
 async def files():
