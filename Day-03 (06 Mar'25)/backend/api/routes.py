@@ -26,7 +26,7 @@ async def upload(file: UploadFile = File(...)):
 
 @router.get("/files")
 async def files():
-    files = [f for f in os.listdir(UPLOAD_DIRECTORY) if f.endswith(".py") and f != "main.py" and f != "class_finder.py" and f != "__init__.py"]
+    files = [f for f in os.listdir(UPLOAD_DIRECTORY) if f.endswith(".py") and f != "main.py" and f != "ClassFinder.py" and f != "class_finder.py" and f != "__init__.py"]
     return {"files": files}
 
 # get the file content
