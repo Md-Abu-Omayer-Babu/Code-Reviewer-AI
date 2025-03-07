@@ -2,11 +2,14 @@
 import React, { useEffect, useState } from "react";
 import { MdDelete } from "react-icons/md";
 import axios from "axios";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 function Page() {
   const [files, setFiles] = useState([]);
   const [content, setContent] = useState(""); 
   const [className, setClassName] = useState("");
+  const router = useRouter();
 
   useEffect(() => {
     showFiles();
@@ -60,7 +63,7 @@ function Page() {
 
   return (
     <div>
-      <h1 className="text-center bg-amber-400">Code Reviewer AI Analyze</h1>
+      <h1 className="text-center bg-white">Code Reviewer AI Analyze</h1>
       <div className="flex justify-center items-center bg-amber-300 w-full h-screen flex-col">
         {files.length > 0 ? (
           files.map((file) => (
@@ -77,7 +80,11 @@ function Page() {
             </div>
           ))
         ) : (
-          <p className="text-lg">No files found</p>
+          <div className="flex flex-col items-center bg-white rounded-md p-8 shadow-md">
+            <p className="text-2xl font-semibold">No files found</p>
+            <p className="text-lg text-gray-500">Please upload a file to analyze its code.</p>
+            <Link href="/codereviewerai-file-upload" className="mt-4 text-blue-500 hover:text-blue-700 hover:underline">Upload a file</Link>
+          </div>
         )}
 
         <br />

@@ -9,10 +9,8 @@ from models.files import PythonFile
 
 router = APIRouter()
 
-# Define a directory to store uploaded files
-UPLOAD_DIRECTORY = "./db" 
+UPLOAD_DIRECTORY = "./uploaded_python_file_storage" 
 
-# Ensure the upload directory exists
 os.makedirs(UPLOAD_DIRECTORY, exist_ok=True)
 
 # upload a python file
