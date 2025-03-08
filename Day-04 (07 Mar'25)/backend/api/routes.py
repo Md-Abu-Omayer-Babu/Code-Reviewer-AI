@@ -1,5 +1,5 @@
 import os
-from fastapi import APIRouter, File, UploadFile
+from fastapi import APIRouter, File, UploadFile, HTTPException
 from pathlib import Path
 from backend.services.classFinder import classFinder
 
@@ -23,16 +23,16 @@ async def upload_file(file : UploadFile = File(...)):
             f.write(await file.read())
         return {"message": "File uploaded successfully"}
     else:
-        return {"message": "File is not a python file"}
+        raise HTTPException(status_code=400, detail="File is not a python file")
     
 # file content
 @router.get("/content/{file}")
 async def file_content(file_name: str):
     file_path = Path(uploaded_dir) / file_name
     if not file_path.is_file():
-        return {"file is not exists!"}
+        raise HTTPException(status_code=404, detail="File is not exists!")
     if not file_path.suffix == ".py":
-        return {"file is not a python file"}
+        raise HTTPException(status_code=400, detail="File is not a python file")
     
     with open(file_path, "r") as f:
         return {"content": f.read()}
@@ -42,9 +42,9 @@ async def file_content(file_name: str):
 async def class_finder(filename: str):
     file_path = Path(uploaded_dir) / filename
     if not file_path.is_file():
-        return {"file is not exists!"}
+        raise HTTPException(status_code=404, detail="File is not exists!")
     if not file_path.suffix == ".py":
-        return {"file is not a python file"}
+        raise HTTPException(status_code=400, detail="File is not a python file")
     with open(file_path, "r") as f:
         content = f.read()
         classes = classFinder(content)
