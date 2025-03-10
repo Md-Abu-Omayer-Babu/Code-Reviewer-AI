@@ -18,3 +18,8 @@ def test_file_content():
     response = client.get("/class_finder?filename=test.py")
     assert response.status_code == status.HTTP_200_OK
     assert response.json() == {"classes": []}
+    
+def test_class_finder():
+    response = client.get("/class_finder?filename=test.py")
+    assert response.status_code == status.HTTP_200_OK
+    assert response.json() == {"classes": []}
