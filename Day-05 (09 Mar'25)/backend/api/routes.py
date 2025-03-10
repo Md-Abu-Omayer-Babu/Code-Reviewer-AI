@@ -1,19 +1,22 @@
-import os
 from fastapi import APIRouter, File, UploadFile, HTTPException
-from pathlib import Path
 from backend.services.classFinder import classFinder
 from backend.services.python_file_validation_check import isPythonFile
 from backend.services.file_path_finder import PathFinder
 from backend.services.file_reader import FileReader
+from backend.services.file_writer import write_file
+import os
 
-router = APIRouter()
+router = APIRouter(
+    prefix="/files",
+    tags=["files_operations"],
+)
 
 uploaded_dir = './db'
 
 if not os.path.isdir(uploaded_dir):
     os.makedirs(uploaded_dir)
 
-@router.get("/files")
+@router.get("/")
 async def api_testing():
     return "apis.routes is working....."
 
@@ -22,12 +25,11 @@ async def api_testing():
 async def upload_file(file : UploadFile = File(...)):
     if isPythonFile(file.filename):
         file_path = PathFinder(file.filename, uploaded_dir)
-        with open(file_path, "wb") as f:
-            f.write(await file.read())
-        return {"message": "File uploaded successfully"}
+        message = write_file(file_path, file)
+        return message
     else:
         raise HTTPException(status_code=400, detail="File is not a python file")
-    
+
 # file content
 @router.get("/content/{file}")
 async def file_content(file_name: str):
