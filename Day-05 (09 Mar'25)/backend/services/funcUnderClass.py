@@ -5,16 +5,16 @@ def funcUnderClass(python_code: str):
     lines = python_code.split("\n")
     
     for line in lines:
-        stripped_line = line.lstrip()
-        indentation_level = len(line) - len(stripped_line)
+        lines = line.lstrip()
+        indentation_level = len(line) - len(lines)
         
-        if stripped_line.startswith("class "):
-            class_name = stripped_line.split()[1].split("(")[0].split(":")[0]
+        if lines.startswith("class "):
+            class_name = lines.split()[1].split("(")[0].split(":")[0]
             current_class = class_name
             functions[current_class] = []
         
-        elif stripped_line.startswith("def "):
-            function_name = stripped_line.split()[1].split("(")[0]
+        elif lines.startswith("def "):
+            function_name = lines.split()[1].split("(")[0]
             
             if indentation_level == 0:  # Function is at the global level
                 functions["Global_Functions"].append(function_name)

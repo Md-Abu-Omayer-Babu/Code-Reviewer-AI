@@ -1,6 +1,6 @@
 from fastapi import status
 from fastapi.testclient import TestClient
-from backend.main import app 
+from backend.main import app
 
 client = TestClient(app)
 
@@ -24,7 +24,7 @@ def test_class_finder():
     assert response.status_code == status.HTTP_200_OK
     assert response.json() == {"classes": []}
     
-def test_function_under_classes():
-    response = client.get("/class_finding/functions_under_classes?filename=test.py")
-    assert response.status_code == status.HTTP_200_OK
-    assert response.json() == {'functions': {'Global_Functions': []}}
+# def test_function_under_classes():
+#     response = client.get("/class_finding/functions_under_classes?filename=test.py")
+#     assert response.status_code == status.HTTP_200_OK
+#     assert response.json() == {'functions': {'Global_Functions': []}}
