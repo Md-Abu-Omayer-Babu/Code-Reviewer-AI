@@ -23,3 +23,8 @@ def test_class_finder():
     response = client.get("/class_finding/class_finder?filename=test.py")
     assert response.status_code == status.HTTP_200_OK
     assert response.json() == {"classes": []}
+    
+def test_function_under_classes():
+    response = client.get("/class_finding/functions_under_classes?filename=test.py")
+    assert response.status_code == status.HTTP_200_OK
+    assert response.json() == {'functions': {'Global_Functions': []}}

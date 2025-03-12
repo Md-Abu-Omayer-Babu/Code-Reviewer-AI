@@ -6,5 +6,4 @@ class Animal:
 class Dog(Animal):
     def display():
         print("I am a dog.")
-
-
+        

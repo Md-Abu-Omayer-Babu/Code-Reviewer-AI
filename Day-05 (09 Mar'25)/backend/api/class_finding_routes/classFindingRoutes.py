@@ -1,7 +1,6 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter
 from backend.services.classFinder import classFinder
 from backend.services.file_reader import FileReader
-from backend.services.file_path_finder import PathFinder
 import os
 
 router = APIRouter(
@@ -24,4 +23,5 @@ async def class_finder(filename: str):
     content = FileReader(filename, uploaded_dir)
     classes = classFinder(content)
     return {"classes": classes}
+
 

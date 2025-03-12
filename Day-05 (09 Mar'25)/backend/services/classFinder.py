@@ -10,4 +10,3 @@ def classFinder(python_code: str):
                 class_name = class_name.split("(")[0]
                 classes.append(class_name)
     return classes
-
