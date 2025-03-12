@@ -1,8 +1,8 @@
 from fastapi import status
 from fastapi.testclient import TestClient
-from backend.api.routes import router
+from backend.main import app 
 
-client = TestClient(router)
+client = TestClient(app)
 
 def test_files():
     response = client.get("/files")
@@ -13,13 +13,13 @@ def test_upload_file():
     response = client.post("/files/upload", files={"file": ("test.py", "print('Hello World')")})
     assert response.status_code == status.HTTP_200_OK
     assert response.json() == {"message": "File uploaded successfully"}
-    
+
 def test_file_content():
-    response = client.get("/files/class_finder?filename=test.py")
+    response = client.get("/files/content/test.py")
     assert response.status_code == status.HTTP_200_OK
-    assert response.json() == {"classes": []}
+    assert response.json() == {"content": "print('Hello World')"}
     
 def test_class_finder():
-    response = client.get("/files/class_finder?filename=test.py")
+    response = client.get("/class_finding/class_finder?filename=test.py")
     assert response.status_code == status.HTTP_200_OK
     assert response.json() == {"classes": []}

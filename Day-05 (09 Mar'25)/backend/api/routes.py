@@ -1,5 +1,4 @@
 from fastapi import APIRouter, File, UploadFile, HTTPException
-from backend.services.classFinder import classFinder
 from backend.services.python_file_validation_check import isPythonFile
 from backend.services.file_path_finder import PathFinder
 from backend.services.file_reader import FileReader
@@ -31,13 +30,8 @@ async def upload_file(file : UploadFile = File(...)):
         raise HTTPException(status_code=400, detail="File is not a python file")
 
 # file content
-@router.get("/content/{file}")
+@router.get("/content/{file_name}")
 async def file_content(file_name: str):
     return {"content": FileReader(file_name, uploaded_dir)}
 
-# class finder 
-@router.get("/class_finder")
-async def class_finder(filename: str):
-    content = FileReader(filename, uploaded_dir)
-    classes = classFinder(content)
-    return {"classes": classes}
+
