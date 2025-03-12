@@ -22,15 +22,3 @@ def funcUnderClass(python_code: str):
                 functions[current_class].append(function_name)
     
     return functions
-
-sample_code = """
-class Animal:
-    def display(self):
-        print("I am an animal.")
-
-class Dog:
-    def speak(self):
-        print("Bark!")
-"""
-
-print(funcUnderClass(sample_code))

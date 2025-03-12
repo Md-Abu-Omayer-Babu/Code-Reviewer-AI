@@ -23,7 +23,6 @@ async def function_finder(filename: str):
     return {"functions": functions}
 
 # functions under class
-# functions under class
 @router.get("/functions_under_classes")
 async def function_under_classes(filename: str):
     content = FileReader(filename, uploaded_dir)
