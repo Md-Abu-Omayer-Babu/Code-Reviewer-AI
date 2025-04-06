@@ -7,8 +7,12 @@ function ReviewCode() {
   const router = useRouter();
   const [filesname, setFilesname] = useState([]);
   const [fileContent, setFileContent] = useState("");
+  const [isFullCodeHovered, setIsFullCodeHovered] = useState(false);
   const [isFuncHovered, setIsFuncHovered] = useState(false);
   const [isClassHovered, setIsClassHovered] = useState(false);
+  const [selectedFile, setSelectedFile] = useState("");
+  const [showOptions, setShowOptions] = useState(false);
+  const [showCode, setShowCode] = useState(false);
 
   useEffect(() => {
     const fetchFiles = async () => {
@@ -28,15 +32,24 @@ function ReviewCode() {
     fetchFiles();
   }, []);
 
+  const showAllClasses = async () => {};
+
+  const showAllFunctions = async () => {};
+
+  const chooseOptions = (fileName) => {
+    setSelectedFile(fileName);
+    setShowOptions(true);
+    setShowCode(false);
+  };
+
   const showFullCode = async (fileName) => {
     try {
       const response = await fetch(
         `http://localhost:8000/files/get_contents/${fileName}`
       );
       const data = await response.json();
-      console.log(data);
-
       setFileContent(data.content);
+      setShowCode(true);
     } catch (error) {
       console.error("Error fetching file content:", error);
     }
@@ -76,7 +89,7 @@ function ReviewCode() {
               <div
                 className="bg-blue-500 flex flex-col w-32 h-32 rounded text-white text-center justify-center items-center cursor-pointer hover:bg-white transition"
                 onClick={() => {
-                  showFullCode(file);
+                  chooseOptions(file);
                 }}
                 draggable={true}
                 onDragStart={(e) => e.dataTransfer.setData("text", file)}
@@ -102,17 +115,31 @@ function ReviewCode() {
         ) : (
           <p className="text-gray-600 text-lg">No files found.</p>
         )}
-        {fileContent && (
+
+        {showOptions && selectedFile && (
           <div className="mt-8 p-4 flex flex-col gap-2 border border-gray-300 rounded bg-white">
-            {/* <h2 className="text-xl text-center font-bold mb-4">File Content:</h2>
-            <pre className="whitespace-pre-wrap">{fileContent}</pre> */}
+            <h2 className={`text-lg font-bold text-center ${isFullCodeHovered ? "text-white" : "text-black"}`}>{selectedFile}</h2>
             <Tooltip content={"click to show full code"}>
-              <button className={`bg-blue-400 ${isFuncHovered ? 'bg-white text-white' : 'text-black'} ${isClassHovered ? 'bg-white text-white' : 'text-black'} rounded-xl p-1 cursor-pointer`}>
+              <button
+                className={`bg-blue-400 ${
+                  isFuncHovered ? "bg-white text-white" : "text-black"
+                } ${
+                  isClassHovered ? "bg-white text-white" : "text-black"
+                } rounded-xl p-1 cursor-pointer`}
+                onClick={() => {
+                  showFullCode(file);
+                }}
+                onMouseOver={() => setIsFullCodeHovered(true)}
+                onMouseOut={() => setIsFullCodeHovered(false)}
+              >
                 Full Code
               </button>
             </Tooltip>
             <Tooltip content={"click to show all classes"}>
-              <button className={`bg-blue-400 ${isFuncHovered ? 'bg-white text-white' : 'text-black'} rounded-xl p-1 cursor-pointer`}
+              <button
+                className={`bg-blue-400 ${
+                  isFuncHovered ? "bg-white text-white" : "text-black"
+                } rounded-xl p-1 cursor-pointer`}
                 onMouseOver={() => setIsClassHovered(true)}
                 onMouseOut={() => setIsClassHovered(false)}
               >
@@ -120,13 +147,25 @@ function ReviewCode() {
               </button>
             </Tooltip>
             <Tooltip content={"click to show all functions"}>
-              <button className={`bg-blue-400 ${isClassHovered ? 'bg-white text-white' : 'text-black'} rounded-xl p-1 cursor-pointer`}
+              <button
+                className={`bg-blue-400 ${
+                  isClassHovered ? "bg-white text-white" : "text-black"
+                } rounded-xl p-1 cursor-pointer`}
                 onMouseOver={() => setIsFuncHovered(true)}
                 onMouseOut={() => setIsFuncHovered(false)}
               >
                 All Functions
               </button>
             </Tooltip>
+          </div>
+        )}
+
+        {showCode && fileContent && (
+          <div className="mt-8 p-4 flex flex-col gap-2 border border-gray-300 rounded bg-white w-full max-w-4xl">
+            <h2 className="text-xl text-center font-bold mb-4">
+              File Content: {selectedFile}
+            </h2>
+            <pre className="whitespace-pre-wrap">{fileContent}</pre>
           </div>
         )}
       </div>
