@@ -22,7 +22,7 @@ if not os.path.isdir(uploaded_dir):
 async def test_api():
     return {"message": "This Test API is working!"}
 
-@router.get("/all_files")
+@router.get("/get_all_files")
 async def all_files():
     return {"files": os.listdir(uploaded_dir)}
 

@@ -17,15 +17,15 @@ if not os.path.isdir(uploaded_dir):
 
 
 # all classes
-@router.get("/function_finder")
+@router.get("/get_functions/{filename}")
 async def function_finder(filename: str):
     content = FileReader(filename, uploaded_dir)
     functions = functionFinder(content)
     return {"functions": functions}
     
 # functions under class
-@router.get("/functions_under_classes")
+@router.get("/get_functions_under_classes")
 async def function_under_classes(filename: str):
     content = FileReader(filename, uploaded_dir)
     functions = functionUnderClass(content)
-    return {"functions": functions}
+    return {"functions_under_classes": functions}

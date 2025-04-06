@@ -18,7 +18,7 @@ async def class_finder_route_testing():
     return {"message": "Class finder APIs are working!"}
 
 # class finder
-@router.get("/class_finder")
+@router.get("/get_classes/{filename}")
 async def class_finder(filename: str):
     content = FileReader(filename, uploaded_dir)
     classes = classFinder(content)

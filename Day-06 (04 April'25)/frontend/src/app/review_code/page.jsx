@@ -13,11 +13,15 @@ function ReviewCode() {
   const [selectedFile, setSelectedFile] = useState("");
   const [showOptions, setShowOptions] = useState(false);
   const [showCode, setShowCode] = useState(false);
+  const [showAllClasses, setShowAllClasses] = useState(false);
+  const [showAllFunctions, setShowAllFunctions] = useState(false);
+  const [classes, setClasses] = useState([]);
+  const [functions, setFunctions] = useState([]);
 
   useEffect(() => {
     const fetchFiles = async () => {
       try {
-        const response = await fetch("http://localhost:8000/files/all_files");
+        const response = await fetch("http://localhost:8000/files/get_all_files");
         const data = await response.json();
 
         console.log(data);
@@ -32,24 +36,58 @@ function ReviewCode() {
     fetchFiles();
   }, []);
 
-  const showAllClasses = async () => {};
+  // show all classes
+  const showClasses = async (fileName) => {
+    try {
+      const response = await fetch(
+        `http://localhost:8000/class_finding/get_classes/${fileName}`
+      );
+      const data = await response.json();
+      console.log(data);
+      
+      setClasses(data.classes);
+      setShowAllClasses(true);
+      setShowAllFunctions(false);
+    } catch (error) {
+      console.error("Error fetching file content:", error);
+    }
+  };
 
-  const showAllFunctions = async () => {};
+  // show all functions
+const showFunctions = async (fileName) => {
+  try {
+    const response = await fetch(
+        `http://localhost:8000/functions/get_functions/${fileName}`
+      );
+      const data = await response.json();
+      setFunctions(data.functions);
+      setShowAllClasses(false);
+      setShowAllFunctions(true);
+    } catch (error) {
+      console.error("Error fetching file content:", error);
+    }
+  };
 
+  // choose options
   const chooseOptions = (fileName) => {
     setSelectedFile(fileName);
     setShowOptions(true);
     setShowCode(false);
+    setShowAllClasses(false);
+    setShowAllFunctions(false);
   };
 
-  const showFullCode = async (fileName) => {
-    try {
+  // show full code
+const showFullCode = async (fileName) => {
+  try {
       const response = await fetch(
         `http://localhost:8000/files/get_contents/${fileName}`
       );
       const data = await response.json();
       setFileContent(data.content);
       setShowCode(true);
+      setShowAllClasses(false);
+      setShowAllFunctions(false);
     } catch (error) {
       console.error("Error fetching file content:", error);
     }
@@ -127,7 +165,7 @@ function ReviewCode() {
                   isClassHovered ? "bg-white text-white" : "text-black"
                 } rounded-xl p-1 cursor-pointer`}
                 onClick={() => {
-                  showFullCode(file);
+                  showFullCode(selectedFile);
                 }}
                 onMouseOver={() => setIsFullCodeHovered(true)}
                 onMouseOut={() => setIsFullCodeHovered(false)}
@@ -142,6 +180,7 @@ function ReviewCode() {
                 } rounded-xl p-1 cursor-pointer`}
                 onMouseOver={() => setIsClassHovered(true)}
                 onMouseOut={() => setIsClassHovered(false)}
+                onClick={() => showClasses(selectedFile)}
               >
                 All Classes
               </button>
@@ -153,6 +192,7 @@ function ReviewCode() {
                 } rounded-xl p-1 cursor-pointer`}
                 onMouseOver={() => setIsFuncHovered(true)}
                 onMouseOut={() => setIsFuncHovered(false)}
+                onClick={() => showFunctions(selectedFile)}
               >
                 All Functions
               </button>
@@ -161,11 +201,29 @@ function ReviewCode() {
         )}
 
         {showCode && fileContent && (
-          <div className="mt-8 p-4 flex flex-col gap-2 border border-gray-300 rounded bg-white w-full max-w-4xl">
+          <div className="p-4 flex flex-col gap-2 border border-gray-300 rounded bg-white">
             <h2 className="text-xl text-center font-bold mb-4">
               File Content: {selectedFile}
             </h2>
             <pre className="whitespace-pre-wrap">{fileContent}</pre>
+          </div>
+        )}
+
+        {showAllClasses && classes && (
+          <div className="p-4 flex flex-col gap-2 border border-gray-300 rounded bg-white">
+            <h2 className="text-xl text-center font-bold mb-4">
+              Classes: {selectedFile}
+            </h2>
+            <pre className="whitespace-pre-wrap">{classes.join("\n")}</pre>
+          </div>
+        )}
+
+        {showAllFunctions && functions && (
+          <div className="p-4 flex flex-col gap-2 border border-gray-300 rounded bg-white">
+            <h2 className="text-xl text-center font-bold mb-4">
+              Functions: {selectedFile}
+            </h2>
+            <pre className="whitespace-pre-wrap">{functions.join("\n")}</pre>
           </div>
         )}
       </div>
