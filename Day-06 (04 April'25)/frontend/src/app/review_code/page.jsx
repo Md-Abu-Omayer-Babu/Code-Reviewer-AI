@@ -218,11 +218,20 @@ function ReviewCode() {
         )}
 
         {showAllClasses && classes && (
-          <div className="p-4 flex flex-col gap-2 border border-gray-300 rounded bg-white">
+          <div className="p-4 flex flex-col gap-2 border border-gray-300 rounded bg-white w-full max-w-xl">
             <h2 className="text-xl text-center font-bold mb-4">
               Classes: {selectedFile}
             </h2>
-            <pre className="whitespace-pre-wrap">{classes.join("\n")}</pre>
+            <pre className="whitespace-pre-wrap w-full max-w-xl">
+              {classes.map((cls, idx) => (
+                <div
+                  key={idx}
+                  className="bg-blue-400 text-white px-4 py-1 mb-1 rounded"
+                >
+                  {cls}
+                </div>
+              ))}
+            </pre>
           </div>
         )}
 

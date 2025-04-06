@@ -1,8 +1,3 @@
-from ast import Pass
-
-def global_func():
-    Pass
-
 class Animal:
     a = 5
     def display():
@@ -19,5 +14,3 @@ class Cat(Animal):
 class Bird:
     def display():
         print("I am a bird.")
-        
-
