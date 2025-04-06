@@ -21,7 +21,9 @@ function ReviewCode() {
   useEffect(() => {
     const fetchFiles = async () => {
       try {
-        const response = await fetch("http://localhost:8000/files/get_all_files");
+        const response = await fetch(
+          "http://localhost:8000/files/get_all_files"
+        );
         const data = await response.json();
 
         console.log(data);
@@ -36,6 +38,22 @@ function ReviewCode() {
     fetchFiles();
   }, []);
 
+  // show full code
+  const showFullCode = async (fileName) => {
+    try {
+      const response = await fetch(
+        `http://localhost:8000/files/get_contents/${fileName}`
+      );
+      const data = await response.json();
+      setFileContent(data.content);
+      setShowCode(true);
+      setShowAllClasses(false);
+      setShowAllFunctions(false);
+    } catch (error) {
+      console.error("Error fetching file content:", error);
+    }
+  };
+
   // show all classes
   const showClasses = async (fileName) => {
     try {
@@ -44,7 +62,7 @@ function ReviewCode() {
       );
       const data = await response.json();
       console.log(data);
-      
+
       setClasses(data.classes);
       setShowAllClasses(true);
       setShowAllFunctions(false);
@@ -54,13 +72,13 @@ function ReviewCode() {
   };
 
   // show all functions
-const showFunctions = async (fileName) => {
-  try {
-    const response = await fetch(
-        `http://localhost:8000/functions/get_functions/${fileName}`
+  const showFunctions = async (fileName) => {
+    try {
+      const response = await fetch(
+        `http://localhost:8000/functions/get_functions_under_classes/${fileName}`
       );
       const data = await response.json();
-      setFunctions(data.functions);
+      setFunctions(data.functions_under_classes);
       setShowAllClasses(false);
       setShowAllFunctions(true);
     } catch (error) {
@@ -75,22 +93,6 @@ const showFunctions = async (fileName) => {
     setShowCode(false);
     setShowAllClasses(false);
     setShowAllFunctions(false);
-  };
-
-  // show full code
-const showFullCode = async (fileName) => {
-  try {
-      const response = await fetch(
-        `http://localhost:8000/files/get_contents/${fileName}`
-      );
-      const data = await response.json();
-      setFileContent(data.content);
-      setShowCode(true);
-      setShowAllClasses(false);
-      setShowAllFunctions(false);
-    } catch (error) {
-      console.error("Error fetching file content:", error);
-    }
   };
 
   const deleteFile = async (fileName) => {
@@ -156,7 +158,13 @@ const showFullCode = async (fileName) => {
 
         {showOptions && selectedFile && (
           <div className="mt-8 p-4 flex flex-col gap-2 border border-gray-300 rounded bg-white">
-            <h2 className={`text-lg font-bold text-center ${isFullCodeHovered ? "text-white" : "text-black"}`}>{selectedFile}</h2>
+            <h2
+              className={`text-lg font-bold text-center ${
+                isFullCodeHovered ? "text-white" : "text-black"
+              }`}
+            >
+              {selectedFile}
+            </h2>
             <Tooltip content={"click to show full code"}>
               <button
                 className={`bg-blue-400 ${
@@ -219,11 +227,22 @@ const showFullCode = async (fileName) => {
         )}
 
         {showAllFunctions && functions && (
-          <div className="p-4 flex flex-col gap-2 border border-gray-300 rounded bg-white">
+          <div className="p-4 flex flex-col gap-2 border border-gray-300 rounded bg-white w-full max-w-xl">
             <h2 className="text-xl text-center font-bold mb-4">
-              Functions: {selectedFile}
+              Functions Under Classes: {selectedFile}
             </h2>
-            <pre className="whitespace-pre-wrap">{functions.join("\n")}</pre>
+            {Object.entries(functions).map(([className, funcList]) => (
+              <div key={className} className="mb-2">
+                <h3 className="font-semibold text-lg text-blue-700">
+                  {className}
+                </h3>
+                <ul className="list-disc list-inside pl-4 text-gray-800">
+                  {funcList.map((func, idx) => (
+                    <li key={idx}>{func}</li>
+                  ))}
+                </ul>
+              </div>
+            ))}
           </div>
         )}
       </div>
