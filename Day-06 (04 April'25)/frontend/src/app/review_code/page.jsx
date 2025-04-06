@@ -7,6 +7,8 @@ function ReviewCode() {
   const router = useRouter();
   const [filesname, setFilesname] = useState([]);
   const [fileContent, setFileContent] = useState("");
+  const [isFuncHovered, setIsFuncHovered] = useState(false);
+  const [isClassHovered, setIsClassHovered] = useState(false);
 
   useEffect(() => {
     const fetchFiles = async () => {
@@ -42,15 +44,16 @@ function ReviewCode() {
 
   const deleteFile = async (fileName) => {
     try {
-      const response = await fetch(`http://localhost:8000/files/delete/${fileName}`, {
-        method: 'DELETE',
-      });
-
+      const response = await fetch(
+        `http://localhost:8000/files/delete/${fileName}`,
+        {
+          method: "DELETE",
+        }
+      );
     } catch (error) {
       console.error("Error deleting file:", error);
     }
   };
-  
 
   return (
     <div>
@@ -66,7 +69,10 @@ function ReviewCode() {
       <div className="flex flex-wrap gap-4 items-center justify-center min-h-screen py-8 px-4 sm:px-6 lg:px-8 bg-amber-200">
         {filesname.length > 0 ? (
           filesname.map((file) => (
-            <Tooltip key={file} content={"Click outside of the delete button to show full code!"}>
+            <Tooltip
+              key={file}
+              content={"Click outside of the delete button to show full code!"}
+            >
               <div
                 className="bg-blue-500 flex flex-col w-32 h-32 rounded text-white text-center justify-center items-center cursor-pointer hover:bg-white transition"
                 onClick={() => {
@@ -97,9 +103,30 @@ function ReviewCode() {
           <p className="text-gray-600 text-lg">No files found.</p>
         )}
         {fileContent && (
-          <div className="mt-8 p-4 border border-gray-300 rounded bg-white">
-            <h2 className="text-xl font-bold mb-4">File Content:</h2>
-            <pre className="whitespace-pre-wrap">{fileContent}</pre>
+          <div className="mt-8 p-4 flex flex-col gap-2 border border-gray-300 rounded bg-white">
+            {/* <h2 className="text-xl text-center font-bold mb-4">File Content:</h2>
+            <pre className="whitespace-pre-wrap">{fileContent}</pre> */}
+            <Tooltip content={"click to show full code"}>
+              <button className={`bg-blue-400 ${isFuncHovered ? 'bg-white text-white' : 'text-black'} ${isClassHovered ? 'bg-white text-white' : 'text-black'} rounded-xl p-1 cursor-pointer`}>
+                Full Code
+              </button>
+            </Tooltip>
+            <Tooltip content={"click to show all classes"}>
+              <button className={`bg-blue-400 ${isFuncHovered ? 'bg-white text-white' : 'text-black'} rounded-xl p-1 cursor-pointer`}
+                onMouseOver={() => setIsClassHovered(true)}
+                onMouseOut={() => setIsClassHovered(false)}
+              >
+                All Classes
+              </button>
+            </Tooltip>
+            <Tooltip content={"click to show all functions"}>
+              <button className={`bg-blue-400 ${isClassHovered ? 'bg-white text-white' : 'text-black'} rounded-xl p-1 cursor-pointer`}
+                onMouseOver={() => setIsFuncHovered(true)}
+                onMouseOut={() => setIsFuncHovered(false)}
+              >
+                All Functions
+              </button>
+            </Tooltip>
           </div>
         )}
       </div>
