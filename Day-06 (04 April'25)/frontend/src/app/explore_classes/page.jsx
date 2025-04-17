@@ -1,0 +1,114 @@
+"use client";
+
+import { useRouter, useSearchParams } from "next/navigation";
+import React, { useState } from "react";
+
+function ExploreClasses() {
+  const router = useRouter();
+  const [classes, setClasses] = useState([]);
+
+  const searchParams = useSearchParams();
+  const selectedFile = searchParams.get("file");
+
+  // show all classes
+  const showAllClasses = async (fileName) => {
+    try {
+      const response = await fetch(
+        `http://localhost:8000/class_finding/get_classes/${fileName}`
+      );
+      const data = await response.json();
+      console.log(data);
+
+      setClasses(data.classes);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const makeDraggable = (e, index) => {
+    let isDragging = false;
+    let X, Y;
+
+    // Start dragging on mousedown
+    index.addEventListener("mousedown", (e) => {
+      isDragging = true;
+      X = e.clientX - index.getBoundingClientRect().left;
+      Y = e.clientY - index.getBoundingClientRect().top;
+      index.style.position = "absolute";
+    });
+
+    // Move the box on mousemove
+    document.addEventListener("mousemove", (e) => {
+      if (!isDragging) return;
+      index.style.left = `${e.clientX - X}px`;
+      index.style.top = `${e.clientY - Y}px`;
+    });
+
+    // Stop dragging on mouseup
+    document.addEventListener("mouseup", () => {
+      isDragging = false;
+    });
+  };
+
+  return (
+    <div>
+      <h1
+        className="p-4 w-full text-2xl cursor-pointer bg-gray-300 text-black font-bold text-center"
+        onClick={() => {
+          router.push("/");
+        }}
+      >
+        Code Reviewer AI
+      </h1>
+
+      <div className="flex flex-wrap gap-4 items-center justify-center min-h-screen py-8 px-4 sm:px-6 lg:px-8 bg-amber-200">
+        {/* hidden */}
+
+        {showAllClasses && classes && (
+          <div className="flex flex-col gap-10 justify-center items-center text-center">
+            <div className="cursor-pointer">
+              <button
+                className="bg-blue-500 rounded-sm h-full w-40 cursor-pointer"
+                onClick={() => {
+                  showAllClasses(selectedFile);
+                }}
+              >
+                Show All Classes
+              </button>
+            </div>
+
+            <div className="text-center font-semibold max-w-xl">
+              {/* {classes.join('\n')} */}
+              <div className="flex flex-row gap-5">
+                {classes.map((cls, index) => (
+                  <div
+                    key={index}
+                    className="bg-blue-400 cursor-pointer rounded-xl font-bold text-white h-32 w-32 text-center justify-center items-center flex"
+                    
+                    draggable={true}
+                    onDragStart={(e) => {
+                      e.dataTransfer.setData("text", cls);
+                    }}
+                    onDragEnd={(e) => {
+                      e.target.style.position = "absolute";
+                      e.target.style.left = `${e.clientX - e.target.offsetWidth}px`;
+                      e.target.style.top = `${e.clientY - e.target.offsetHeight}px`;
+                    }}
+
+                    // onClick={(e) => {
+                    //   makeDraggable(e, index);
+                    // }}
+                  >
+                    {cls}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+export default ExploreClasses;

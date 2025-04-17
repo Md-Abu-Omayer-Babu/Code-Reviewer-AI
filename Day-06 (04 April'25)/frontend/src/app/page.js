@@ -1,9 +1,11 @@
 'use client'
 
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 function Home() {
   const router = useRouter()
+  const [loading, setLoading] = useState(false)
 
   return (
     <div className="flex bg-black flex-col items-center justify-center min-h-screen py-8 px-4 sm:px-6 lg:px-8">
@@ -15,11 +17,17 @@ function Home() {
         <button className="bg-blue-500 cursor-pointer text-white px-6 py-2 rounded-md"
           onClick={() => {
             router.push('/fileUpload')
+            setLoading(true)
           }}
         >
           Get Started
         </button>
       </div>
+      {loading && (
+        <div className="mt-8 bg-amber-50 text-shadow-white">
+          <p>Loading...</p>
+        </div>
+      )}
     </div>
   );
 }

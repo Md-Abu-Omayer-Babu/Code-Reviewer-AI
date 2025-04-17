@@ -6,6 +6,6 @@ def functionFinder(python_code: str):
         parts = line.split()
         if "def" in parts:
             if len(parts) > 1:
-                function_name = parts[1].split("(")[0]  # Extract function name correctly
+                function_name = parts[1].split("(")[0]
                 functions.append(function_name)
     return functions

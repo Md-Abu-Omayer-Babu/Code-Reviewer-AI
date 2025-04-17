@@ -7,16 +7,24 @@ function ReviewCode() {
   const router = useRouter();
   const [filesname, setFilesname] = useState([]);
   const [fileContent, setFileContent] = useState("");
+  const [selectedFile, setSelectedFile] = useState("");
+
   const [isFullCodeHovered, setIsFullCodeHovered] = useState(false);
   const [isFuncHovered, setIsFuncHovered] = useState(false);
   const [isClassHovered, setIsClassHovered] = useState(false);
-  const [selectedFile, setSelectedFile] = useState("");
+  const [isCommentsHovered, setIsCommentsHovered] = useState(false);
+
   const [showOptions, setShowOptions] = useState(false);
   const [showCode, setShowCode] = useState(false);
   const [showAllClasses, setShowAllClasses] = useState(false);
   const [showAllFunctions, setShowAllFunctions] = useState(false);
+  const [showAllComments, setShowAllComments] = useState(false);
+
   const [classes, setClasses] = useState([]);
   const [functions, setFunctions] = useState([]);
+  const [comments, setComments] = useState([]);
+
+  const [classFound, setClassFound] = useState(false);
 
   useEffect(() => {
     const fetchFiles = async () => {
@@ -49,6 +57,7 @@ function ReviewCode() {
       setShowCode(true);
       setShowAllClasses(false);
       setShowAllFunctions(false);
+      setShowAllComments(false);
     } catch (error) {
       console.error("Error fetching file content:", error);
     }
@@ -66,10 +75,16 @@ function ReviewCode() {
       setClasses(data.classes);
       setShowAllClasses(true);
       setShowAllFunctions(false);
+      setShowAllComments(false);
     } catch (error) {
       console.error("Error fetching file content:", error);
     }
   };
+
+  // check if classes are found
+  useEffect(() => {
+    setClassFound(classes.length === 0 ? false : true);
+  }, [classes]);
 
   // show all functions
   const showFunctions = async (fileName) => {
@@ -81,6 +96,7 @@ function ReviewCode() {
       setFunctions(data.functions_under_classes);
       setShowAllClasses(false);
       setShowAllFunctions(true);
+      setShowAllComments(false);
     } catch (error) {
       console.error("Error fetching file content:", error);
     }
@@ -93,6 +109,7 @@ function ReviewCode() {
     setShowCode(false);
     setShowAllClasses(false);
     setShowAllFunctions(false);
+    setShowAllComments(false);
   };
 
   const deleteFile = async (fileName) => {
@@ -106,6 +123,26 @@ function ReviewCode() {
     } catch (error) {
       console.error("Error deleting file:", error);
     }
+  };
+
+  const showComments = async (fileName) => {
+    try {
+      const response = await fetch(
+        `http://localhost:8000/comments_finding/get_comments/${fileName}`
+      );
+      const data = await response.json();
+      console.log(data);
+      setComments(data.comments);
+      setShowAllClasses(false);
+      setShowAllFunctions(false);
+      setShowAllComments(true);
+    } catch (error) {
+      console.error("Error fetching file content:", error);
+    }
+  };
+
+  const goToExplorePage = () => {
+    router.push(`/explore_classes?file=${encodeURIComponent(selectedFile)}`);
   };
 
   return (
@@ -169,8 +206,8 @@ function ReviewCode() {
               <button
                 className={`bg-blue-400 ${
                   isFuncHovered ? "bg-white text-white" : "text-black"
-                } ${
-                  isClassHovered ? "bg-white text-white" : "text-black"
+                } ${isClassHovered ? "bg-white text-white" : "text-black"} ${
+                  isCommentsHovered ? "bg-white text-white" : "text-black"
                 } rounded-xl p-1 cursor-pointer`}
                 onClick={() => {
                   showFullCode(selectedFile);
@@ -185,6 +222,8 @@ function ReviewCode() {
               <button
                 className={`bg-blue-400 ${
                   isFuncHovered ? "bg-white text-white" : "text-black"
+                } ${
+                  isCommentsHovered ? "bg-white text-white" : "text-black"
                 } rounded-xl p-1 cursor-pointer`}
                 onMouseOver={() => setIsClassHovered(true)}
                 onMouseOut={() => setIsClassHovered(false)}
@@ -197,12 +236,28 @@ function ReviewCode() {
               <button
                 className={`bg-blue-400 ${
                   isClassHovered ? "bg-white text-white" : "text-black"
+                } ${
+                  isCommentsHovered ? "bg-white text-white" : "text-black"
                 } rounded-xl p-1 cursor-pointer`}
                 onMouseOver={() => setIsFuncHovered(true)}
                 onMouseOut={() => setIsFuncHovered(false)}
                 onClick={() => showFunctions(selectedFile)}
               >
                 All Functions
+              </button>
+            </Tooltip>
+
+            <Tooltip content={"click to show all comments"}>
+              <button
+                className={`bg-blue-400 rounded-xl p-1 cursor-pointer
+                  ${isFuncHovered ? "bg-white text-white" : "text-black"}
+                  ${isClassHovered ? "bg-white text-white" : "text-black"}
+                `}
+                onClick={() => showComments(selectedFile)}
+                onMouseOver={() => setIsCommentsHovered(true)}
+                onMouseOut={() => setIsCommentsHovered(false)}
+              >
+                All Comments
               </button>
             </Tooltip>
           </div>
@@ -220,18 +275,29 @@ function ReviewCode() {
         {showAllClasses && classes && (
           <div className="p-4 flex flex-col gap-2 border border-gray-300 rounded bg-white w-full max-w-xl">
             <h2 className="text-xl text-center font-bold mb-4">
-              Classes: {selectedFile}
+              {selectedFile}
             </h2>
-            <pre className="whitespace-pre-wrap w-full max-w-xl">
-              {classes.map((cls, idx) => (
+            <h3 className="text-lg font-bold text-blue-700">Classes: </h3>
+            <pre className="whitespace-pre-wrap w-full text-center font-semibold max-w-xl">
+              {/* {classes.map((cls, idx) => (
                 <div
                   key={idx}
                   className="bg-blue-400 text-white px-4 py-1 mb-1 rounded"
                 >
                   {cls}
                 </div>
-              ))}
+              ))} */}
+
+              {classes.length === 0 ? "No classes found" : classes.join("\n")}
             </pre>
+            {classFound && (
+              <button
+                className="bg-blue-500 cursor-pointer text-white px-6 py-2 rounded-md"
+                onClick={() => goToExplorePage()}
+              >
+                Explore
+              </button>
+            )}
           </div>
         )}
 
@@ -245,13 +311,25 @@ function ReviewCode() {
                 <h3 className="font-semibold text-lg text-blue-700">
                   {className}
                 </h3>
-                <ul className="list-disc list-inside pl-4 text-gray-800">
+                <ul className="text-gray-800">
                   {funcList.map((func, idx) => (
                     <li key={idx}>{func}</li>
                   ))}
                 </ul>
               </div>
             ))}
+          </div>
+        )}
+
+        {showAllComments && comments && (
+          <div className="p-4 flex flex-col gap-2 border border-gray-300 rounded bg-white w-full max-w-xl">
+            <h2 className="text-xl text-center font-bold mb-4">
+              {selectedFile}
+            </h2>
+            <h3 className="text-lg font-bold text-blue-700">Comments: </h3>
+            <pre className="whitespace-pre-wrap w-full text-center font-semibold max-w-xl">
+              {comments}
+            </pre>
           </div>
         )}
       </div>

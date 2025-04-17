@@ -5,60 +5,99 @@ import React, { useEffect, useState } from "react";
 
 function fileUpload() {
   const router = useRouter();
-  const [file, setFile] = useState(null)
-  const [status, setStatus] = useState('')
+  // const [file, setFile] = useState(null);
+  const [files, setFiles] = useState([]);
 
+  const [status, setStatus] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  // const handleUpload = async (e) => {
+  //   e.preventDefault();
+
+  //   if (!file) {
+  //     setStatus("Please select a file");
+  //     return;
+  //   }
+
+  //   const formData = new FormData();
+  //   formData.append("file", file);
+
+  //   try {
+  //     const response = await fetch("http://localhost:8000/files/upload", {
+  //       method: "POST",
+  //       body: formData,
+  //     });
+  //     const data = await response.json();
+  //     setStatus(data.message);
+  //   } catch (error) {
+  //     console.error(error);
+  //     setStatus("Failed to upload file");
+  //   }
+  // };
+
+
+  // upload multiple files
   const handleUpload = async (e) => {
-    e.preventDefault()
-
-    if (!file) {
-      setStatus('Please select a file')
-      return
+    e.preventDefault();
+  
+    if (!files || files.length === 0) {
+      setStatus("Please select at least one file");
+      return;
     }
 
     const formData = new FormData();
-    formData.append("file", file);
+    files.forEach((file) => {
+      formData.append("files", file);
+    });
 
     try {
-      const response = await fetch('http://localhost:8000/files/upload', {
-        method: 'POST',
-        body: formData
-      })
-      const data = await response.json()
-      setStatus(data.message)
-      
+      const response = await fetch("http://localhost:8000/files/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await response.json();
+      console.log(data);
+
+      if (data.message) {
+        setStatus(data.message);
+      } else {
+        setStatus("Unexpected server response");
+      }
     } catch (error) {
-      console.error(error)
-      setStatus('Failed to upload file')
+      console.error(error);
+      setStatus("Failed to upload files");
     }
-  }
+  };
+  
 
   useEffect(() => {
-    if(status === 'File uploaded successfully!'){
+    if (status === "File uploaded successfully!") {
       setTimeout(() => {
-        setStatus('')
-      }, 3000)
+        setStatus("");
+      }, 3000);
     }
-  }, [status])
+  }, [status]);
 
   return (
     <div>
-      <h1 className="p-4 w-full text-2xl cursor-pointer bg-gray-300 text-black font-bold text-center"
+      <h1
+        className="p-4 w-full text-2xl cursor-pointer bg-gray-300 text-black font-bold text-center"
         onClick={() => {
-          router.push('/')
+          router.push("/");
         }}
       >
         Code Reviewer AI
       </h1>
       <div className="flex bg-gray- flex-col gap-4 items-center justify-center min-h-screen py-8 px-4 sm:px-6 lg:px-8">
-        
         <form className="flex flex-col items-center gap-4">
           <input
-            type="file" 
+            type="file"
+            multiple
             className="bg-blue-600 text-white px-6 py-2 rounded-md cursor-pointer"
-            onChange={(e) => setFile(e.target.files[0])}
+            onChange={(e) => setFiles(Array.from(e.target.files))}
           />
-          <button 
+          <button
             type="submit"
             className="bg-blue-600 hover:text-black hover:bg-blue-500 text-white px-6 py-2 rounded-md cursor-pointer"
             onClick={handleUpload}
@@ -69,15 +108,21 @@ function fileUpload() {
         <p>{status}</p>
 
         <div>
-          <button 
+          <button
             className="bg-green-600 text-white px-6 py-2 rounded-md cursor-pointer hover:bg-green-400 hover:text-black"
             onClick={() => {
-              router.push('/review_code')
+              router.push("/review_code");
+              setLoading(true);
             }}
           >
             Review Your Code
           </button>
         </div>
+        {loading && (
+          <div className="mt-8 bg-black text-white">
+            <p>Loading...</p>
+          </div>
+        )}
       </div>
     </div>
   );
