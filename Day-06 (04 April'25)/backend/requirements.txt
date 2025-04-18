@@ -2,3 +2,5 @@ fastapi
 pydantic
 pytest
 motor
+python-multipart
+python-dotenv

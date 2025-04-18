@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import Navbar from "../../../components/Navbar";
 
 function fileUpload() {
   const router = useRouter();
@@ -81,14 +82,8 @@ function fileUpload() {
 
   return (
     <div>
-      <h1
-        className="p-4 w-full text-2xl cursor-pointer bg-gray-300 text-black font-bold text-center"
-        onClick={() => {
-          router.push("/");
-        }}
-      >
-        Code Reviewer AI
-      </h1>
+      <Navbar/>
+      
       <div className="flex bg-gray- flex-col gap-4 items-center justify-center min-h-screen py-8 px-4 sm:px-6 lg:px-8">
         <form className="flex flex-col items-center gap-4">
           <input

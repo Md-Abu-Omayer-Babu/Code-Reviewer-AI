@@ -2,6 +2,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useState } from "react";
+import Navbar from "../../../components/Navbar";
 
 function ExploreClasses() {
   const router = useRouter();
@@ -25,7 +26,7 @@ function ExploreClasses() {
     }
   };
 
-  const makeDraggable = (e, index) => {
+  const makeDraggable = (e) => {
     let isDragging = false;
     let X, Y;
 
@@ -54,14 +55,7 @@ function ExploreClasses() {
 
   return (
     <div>
-      <h1
-        className="p-4 w-full text-2xl cursor-pointer bg-gray-300 text-black font-bold text-center"
-        onClick={() => {
-          router.push("/");
-        }}
-      >
-        Code Reviewer AI
-      </h1>
+      <Navbar/>
 
       <div className="flex flex-wrap gap-4 items-center justify-center min-h-screen py-8 px-4 sm:px-6 lg:px-8 bg-amber-200">
         {/* hidden */}
@@ -97,7 +91,7 @@ function ExploreClasses() {
                     // }}
 
                     onMouseOver={(e) => {
-                      makeDraggable(e, index);
+                      makeDraggable(e);
                     }}
                   >
                     {cls}

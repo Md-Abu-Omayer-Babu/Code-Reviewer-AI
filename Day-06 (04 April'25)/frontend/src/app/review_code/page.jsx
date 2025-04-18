@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Tooltip } from "@heroui/tooltip";
+import Navbar from "../../../components/Navbar";
 
 function ReviewCode() {
   const router = useRouter();
@@ -147,14 +148,7 @@ function ReviewCode() {
 
   return (
     <div>
-      <h1
-        className="p-4 w-full text-2xl cursor-pointer bg-gray-300 text-black font-bold text-center"
-        onClick={() => {
-          router.push("/");
-        }}
-      >
-        Code Reviewer AI
-      </h1>
+      <Navbar/>
 
       <div className="flex flex-wrap gap-4 items-center justify-center min-h-screen py-8 px-4 sm:px-6 lg:px-8 bg-amber-200">
         {filesname.length > 0 ? (
