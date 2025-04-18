@@ -134,11 +134,11 @@ function ReviewCode() {
       const data = await response.json();
       console.log(data);
       
-      // if(data.comments){
-      //   setComments(data.comments);
-      // }else{
-      //   setComments("No comments found");
-      // }
+      if(data.comments){
+        setComments(data.comments);
+      }else{
+        setComments("No comments found");
+      }
 
       setShowAllClasses(false);
       setShowAllFunctions(false);
