@@ -29,19 +29,21 @@ function ExploreClasses() {
     let isDragging = false;
     let X, Y;
 
+    const element = e.target;
+
     // Start dragging on mousedown
-    index.addEventListener("mousedown", (e) => {
+    element.addEventListener("mousedown", (e) => {
       isDragging = true;
-      X = e.clientX - index.getBoundingClientRect().left;
-      Y = e.clientY - index.getBoundingClientRect().top;
-      index.style.position = "absolute";
+      X = e.clientX - element.getBoundingClientRect().left;
+      Y = e.clientY - element.getBoundingClientRect().top;
+      element.style.position = "absolute";
     });
 
     // Move the box on mousemove
     document.addEventListener("mousemove", (e) => {
       if (!isDragging) return;
-      index.style.left = `${e.clientX - X}px`;
-      index.style.top = `${e.clientY - Y}px`;
+      element.style.left = `${e.clientX - X}px`;
+      element.style.top = `${e.clientY - Y}px`;
     });
 
     // Stop dragging on mouseup
@@ -84,20 +86,19 @@ function ExploreClasses() {
                   <div
                     key={index}
                     className="bg-blue-400 cursor-pointer rounded-xl font-bold text-white h-32 w-32 text-center justify-center items-center flex"
-                    
-                    draggable={true}
-                    onDragStart={(e) => {
-                      e.dataTransfer.setData("text", cls);
-                    }}
-                    onDragEnd={(e) => {
-                      e.target.style.position = "absolute";
-                      e.target.style.left = `${e.clientX - e.target.offsetWidth}px`;
-                      e.target.style.top = `${e.clientY - e.target.offsetHeight}px`;
-                    }}
-
-                    // onClick={(e) => {
-                    //   makeDraggable(e, index);
+                    // draggable={true}
+                    // onDragStart={(e) => {
+                    //   e.dataTransfer.setData("text", cls);
                     // }}
+                    // onDragEnd={(e) => {
+                    //   e.target.style.position = "absolute";
+                    //   e.target.style.left = `${e.clientX - e.target.offsetWidth}px`;
+                    //   e.target.style.top = `${e.clientY - e.target.offsetHeight}px`;
+                    // }}
+
+                    onMouseOver={(e) => {
+                      makeDraggable(e, index);
+                    }}
                   >
                     {cls}
                   </div>
