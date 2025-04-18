@@ -11,7 +11,9 @@ def commentFinder(python_code: str):
             comments += comment + "\n"
         else:
             i += 1
-            
+    
+    if comments == "":
+        return "No comments found"
     return comments
 
 

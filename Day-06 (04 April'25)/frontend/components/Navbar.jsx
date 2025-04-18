@@ -1,6 +1,10 @@
+"use client";
+
+import { useRouter } from "next/navigation";
 import React from "react";
 
 function Navbar() {
+  const router = useRouter()
   return (
     <div>
       <h1

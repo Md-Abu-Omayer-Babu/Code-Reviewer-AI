@@ -133,7 +133,13 @@ function ReviewCode() {
       );
       const data = await response.json();
       console.log(data);
-      setComments(data.comments);
+      
+      // if(data.comments){
+      //   setComments(data.comments);
+      // }else{
+      //   setComments("No comments found");
+      // }
+
       setShowAllClasses(false);
       setShowAllFunctions(false);
       setShowAllComments(true);
