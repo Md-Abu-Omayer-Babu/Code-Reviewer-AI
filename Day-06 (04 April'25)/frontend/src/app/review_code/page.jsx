@@ -9,6 +9,7 @@ function ReviewCode() {
   const [filesname, setFilesname] = useState([]);
   const [fileContent, setFileContent] = useState("");
   const [selectedFile, setSelectedFile] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const [isFullCodeHovered, setIsFullCodeHovered] = useState(false);
   const [isFuncHovered, setIsFuncHovered] = useState(false);
@@ -133,10 +134,10 @@ function ReviewCode() {
       );
       const data = await response.json();
       console.log(data);
-      
-      if(data.comments){
+
+      if (data.comments) {
         setComments(data.comments);
-      }else{
+      } else {
         setComments("No comments found");
       }
 
@@ -154,7 +155,7 @@ function ReviewCode() {
 
   return (
     <div>
-      <Navbar/>
+      <Navbar />
 
       <div className="flex flex-wrap gap-4 items-center justify-center min-h-screen py-8 px-4 sm:px-6 lg:px-8 bg-amber-200">
         {filesname.length > 0 ? (
@@ -293,7 +294,10 @@ function ReviewCode() {
             {classFound && (
               <button
                 className="bg-blue-500 cursor-pointer text-white px-6 py-2 rounded-md"
-                onClick={() => goToExplorePage()}
+                onClick={() => {
+                  goToExplorePage();
+                  setLoading(true);
+                }}
               >
                 Explore
               </button>
@@ -330,6 +334,11 @@ function ReviewCode() {
             <pre className="whitespace-pre-wrap w-full text-center font-semibold max-w-xl">
               {comments}
             </pre>
+          </div>
+        )}
+        {loading && (
+          <div className="mt-8 bg-black text-white">
+            <p>Loading...</p>
           </div>
         )}
       </div>
